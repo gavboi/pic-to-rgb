@@ -50,12 +50,13 @@ except:
 pic = ""
 if len(sys.argv) == 1: directory = input("Please specify a path to an image or directory: ")
 else: directory = sys.argv[1]
-if len(sys.argv) == 4: new_w, new_h = sys.argv[2], sys.argv[3]
+if len(sys.argv) == 4 and sys.argv[2].isnumeric() and sys.argv[3].isnumeric():
+    new_w, new_h = int(sys.argv[2]), int(sys.argv[3])
 else:
     size = input("Please specify width and height (leave blank for auto): ")
     size = size.replace(" ",",").replace(",,",",").split(",")
     if len(size) > 1 and size[0].isnumeric() and size[2].isnumeric():
-        new_w, new_h = size[0], size[1]
+        new_w, new_h = int(size[0]), int(size[1])
     else: new_w, new_h = 0, 0
 if len(directory) == 0:
     directory = os.path.join("samples", "test.jpg")
@@ -125,5 +126,5 @@ pr = "["
 for c in colours: pr += "rgb" + str(c) + ","
 pr = pr[:-1] + "]"
 print("--------\n{0}".format(pr))
-input("")
-time.sleep(1)
+input("\nEnter to close")
+time.sleep(0.2)
