@@ -111,20 +111,32 @@ im = Image.open(pic)
 w, h = im.size
 if new_w*new_h == 0: # make this fit better
     new_w, new_h = 40, 40
-factor_w, factor_h = math.floor(w/new_w), math.floor(h/new_h)
+factor_w, factor_h = w/new_w, h/new_h
 img = im.load()
 for y in range(new_h): 
     for x in range(new_w):
         rgba = img[math.floor(factor_w*(1/2+x)), math.floor(factor_h*(1/2+y))]
         colours.append((rgba[0], rgba[1], rgba[2]))
-timer = time.time()-t
 
 # ---display---
-print("Completed in {0}s.".format(math.floor(timer),3))
+print("Image: {0}".format(pic))
+print("Original size: {0}x{1} ({2})".format(w, h, w/h))
+print("New size: {0}x{1} ({2})".format(new_w, new_h, new_w/new_h))
+print("Size factor: {0}x{1}".format(factor_w, factor_h))
 if len(colours) > 10000: print("WARNING: Desmos will not accept lists of over 10000")
+desmos = True
+despre = "S=Calc.getState()\nS.expressions.list[1].latex=\"C="
+despost = "\"\nCalc.setState(S)"
+desform = "\\\\operatorname{rgb}" if desmos else ""
 pr = "["
-for c in colours: pr += "\\\\operatorname{rgb}" + str(c) + ","
-pr = pr[:-1] + "]"
-print("--------\n{0}".format(pr))
-input("\nEnter to close")
+for c in colours: pr += desform + str(c) + ","
+if desmos: pr = despre + pr[:-1] + "]" + despost
+else: pr = pr[:-1] + "]"
+f = open("out.txt", "w")
+f.write(pr)
+f.close()
+timer = time.time()-t
+print("Output saved to out.txt")
+print("Completed in {0}s.".format(round(timer, 3), 3))
+input("\n([Enter] to close)")
 time.sleep(0.2)
