@@ -130,7 +130,10 @@ despost = "\"\nCalc.setState(S)"
 desform = "\\\\operatorname{rgb}" if desmos else ""
 pr = "["
 for c in colours: pr += desform + str(c) + ","
-if desmos: pr = despre + pr[:-1] + "]" + despost
+if desmos:
+    pr = (despre + "\\\\left" +
+          pr[:-1].replace(" ","").replace("(", "\\\\left(").replace(")", "\\\\right)") +
+          "\\\\right]" + despost)
 else: pr = pr[:-1] + "]"
 f = open("out.txt", "w")
 f.write(pr)
