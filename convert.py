@@ -55,7 +55,7 @@ if len(sys.argv) == 4 and sys.argv[2].isnumeric() and sys.argv[3].isnumeric():
 else:
     size = input("Please specify width and height (leave blank for auto): ")
     size = size.replace(" ",",").replace(",,",",").split(",")
-    if len(size) > 1 and size[0].isnumeric() and size[2].isnumeric():
+    if len(size) > 1 and size[0].isnumeric() and size[1].isnumeric():
         new_w, new_h = int(size[0]), int(size[1])
     else: new_w, new_h = 0, 0
 if len(directory) == 0:
