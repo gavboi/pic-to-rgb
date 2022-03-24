@@ -3,7 +3,7 @@ I wanna be able to make a desmos graph using dots of an image, and to get the co
 
 ## Instructions
 - Run convert.py
-- Specify file to use (by path, currently only supports jpg/png) and dimensions (in form '<width> <height>' of resulting colours)
+- Specify file to use (by path, currently only supports jpg/png) and dimensions (in form '\<width\> \<height\>' of resulting colours)
 - Copy output from 'out.txt' and paste into the browser console while on the desmos graph
 - In the 'Dim' folder on the graph, adjust 'W' and 'H' to the width and height you set in the script earlier
 - Also in the 'Dim' folder on the graph, adjust 'S' to change the size of the dots until you are satisfied
