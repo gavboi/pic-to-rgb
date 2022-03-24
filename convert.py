@@ -110,12 +110,12 @@ t = time.time()
 im = Image.open(pic)
 w, h = im.size
 if new_w*new_h == 0: # make this fit better
-    new_w, new_h = 80, 80
+    new_w, new_h = 40, 40
 factor_w, factor_h = math.floor(w/new_w), math.floor(h/new_h)
 img = im.load()
 for y in range(new_h): 
     for x in range(new_w):
-        rgba = img[x,y]
+        rgba = img[math.floor(factor_w*(1/2+x)), math.floor(factor_h*(1/2+y))]
         colours.append((rgba[0], rgba[1], rgba[2]))
 timer = time.time()-t
 
@@ -123,7 +123,7 @@ timer = time.time()-t
 print("Completed in {0}s.".format(math.floor(timer),3))
 if len(colours) > 10000: print("WARNING: Desmos will not accept lists of over 10000")
 pr = "["
-for c in colours: pr += "rgb" + str(c) + ","
+for c in colours: pr += "\\\\operatorname{rgb}" + str(c) + ","
 pr = pr[:-1] + "]"
 print("--------\n{0}".format(pr))
 input("\nEnter to close")
