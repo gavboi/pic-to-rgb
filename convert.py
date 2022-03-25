@@ -48,25 +48,29 @@ except:
 
 # ---get images---
 pic = ""
-if len(sys.argv) == 1: directory = input("Please specify a path to an image or directory: ")
-else: directory = sys.argv[1]
+new_w = -1
+new_h = -1
+
+print("")
+if len(sys.argv) > 1:
+    pic = sys.argv[1]
+while not (os.path.isfile(pic) and (pic.endswith(".png") or pic.endswith(".jpg"))):
+    print("No image found.")
+    pic = input("Please specify a path to an image (leave blank for auto): ")
+    if len(pic) == 0: pic = os.path.join("samples", "test.jpg")
+print("")
 if len(sys.argv) == 4 and sys.argv[2].isnumeric() and sys.argv[3].isnumeric():
     new_w, new_h = int(sys.argv[2]), int(sys.argv[3])
-else:
+while new_w < 0:
+    print("No dimensions found.")
     size = input("Please specify width and height (leave blank for auto): ")
-    size = size.replace(" ",",").replace(",,",",").split(",")
-    if len(size) > 1 and size[0].isnumeric() and size[1].isnumeric():
-        new_w, new_h = int(size[0]), int(size[1])
-    else: new_w, new_h = 0, 0
-if len(directory) == 0:
-    directory = os.path.join("samples", "test.jpg")
-    print("No file provided. Using default file {0}...".format(directory))
-if directory.endswith(".png") or directory.endswith(".jpg"):
-    if os.path.isfile(directory):
-        pic = directory
+    if len(size) == 0: new_w, new_h = 0, 0
     else:
-        print("Could not find image.")
-        sys.exit()
+        size = size.replace(" ",",").replace(",,",",").split(",")
+        if len(size) > 1 and size[0].isnumeric() and size[1].isnumeric():
+            new_w, new_h = int(size[0]), int(size[1])
+print("")
+
 ##elif directory.endswith(".mp4") or directory.endswith(".avi"):
 ##    if os.path.isfile(directory):
 ##        if not os.path.isdir("video_frames"):
@@ -110,7 +114,7 @@ t = time.time()
 im = Image.open(pic)
 w, h = im.size
 if new_w*new_h == 0: # make this fit better
-    new_w, new_h = 40, 40
+    new_w, new_h = 20, round(20*h/w)
 factor_w, factor_h = w/new_w, h/new_h
 img = im.load()
 for y in range(new_h): 
