@@ -124,8 +124,8 @@ for y in range(new_h):
 
 # ---display---
 print("Image: {0}".format(pic))
-print("Original size: {0}x{1} ({2})".format(w, h, w/h))
-print("New size: {0}x{1} ({2})".format(new_w, new_h, new_w/new_h))
+print("Original size: {0}x{1} ({2})".format(w, h, round(w/h, 3)))
+print("New size: {0}x{1} ({2})".format(new_w, new_h, round(new_w/new_h, 3)))
 print("Size factor: {0}x{1}".format(factor_w, factor_h))
 if len(colours) > 10000: print("WARNING: Desmos will not accept lists of over 10000")
 desmos = True
@@ -143,7 +143,7 @@ f = open("out.txt", "w")
 f.write(pr)
 f.close()
 timer = time.time()-t
-print("Output saved to out.txt")
+print("Output saved to out.txt" + (" (desmos format)" if desmos else ""))
 print("Completed in {0}s.".format(round(timer, 3), 3))
 input("\n([Enter] to close)")
 time.sleep(0.2)
