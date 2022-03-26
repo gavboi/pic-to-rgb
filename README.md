@@ -6,8 +6,8 @@ I wanna be able to make a Desmos graph of a picture using dots, and to get the c
 2) Specify file to use (by path, currently only supports jpg/png) and desired dimensions in pixel/dot count
 - Alternatively, run it from the command line with something like `py convert.py <path> <width> <height>` (e.g. `py convert.py samples/test.jpg 50 40`)
 3) Copy output from `out.txt` and paste into the browser console (Ctrl+Shift+J) while on the desmos graph
-- Adjust the value of S on the graph to change the size of the dots until you are satisfied
-- Done!
+4) Adjust the value of S on the graph to change the size of the dots until you are satisfied
+5) Done!
 
 ## Other Links
 Latest Desmos graph link: https://www.desmos.com/calculator/3wzqhr9vmi
