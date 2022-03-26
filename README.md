@@ -1,26 +1,25 @@
 # pic-to-rgb
-I wanna be able to make a desmos graph using dots of an image, and to get the colours, I use this script.
+I wanna be able to make a Desmos graph of a picture using dots, and to get the colours, I use this script.
 
-## Instructions
-- Run convert.py
-- Specify file to use (by path, currently only supports jpg/png) and dimensions (in form '\<width\> \<height\>' of resulting colours)
-- Copy output from 'out.txt' and paste into the browser console while on the desmos graph
-- In the 'Dim' folder on the graph, adjust 'W' and 'H' to the width and height you set in the script earlier
-- Also in the 'Dim' folder on the graph, adjust 'S' to change the size of the dots until you are satisfied
-- Done
+## Instructions (for Desmos)
+1) Run `convert.py`
+2) Specify file to use (by path, currently only supports jpg/png) and desired dimensions in pixel/dot count
+- Alternatively, run it from the command line with something like `py convert.py <path> <width> <height>` (e.g. `py convert.py samples/test.jpg 50 40`)
+3) Copy output from `out.txt` and paste into the browser console (Ctrl+Shift+J) while on the desmos graph
+- Adjust the value of S on the graph to change the size of the dots until you are satisfied
+- Done!
 
 ## Other Links
-The graph I use: https://www.desmos.com/calculator/fthcivyxha
+Latest Desmos graph link: https://www.desmos.com/calculator/3wzqhr9vmi
 
-## Notes
-- The desmos limit for a list is 10000, trying anything bigger will give you an error specifically saying that
-- Using the 'rgb' function in desmos in an array seems to further limit the size to about ~2000 (1500 is fine, 2500 is too much)
-  - This does not mean better resolutions cannot be achieved, this just means you'd need more than one colour variable list, probably also more than one list of points
-- The console commands require 'C' to remain in cell 1, do not move it without also updating code
-- I recommend not clicking on any cell with a long list as desmos will get laggy
+## Desmos Notes
+- The Desmos limit for a list is 10000, trying anything bigger will give you an error specifically saying that
+- Using `rgb()` in Desmos in an array seems to further limit the size to under 2500 (2200 is fine, 2500 is too much)
+- The console commands require the first folder and the top 7 equations in it to remain where they are - if adding anything, do it below the "Dimensions" folder
+- I recommend not clicking on any cell with a long list nor opening the "Dimensions" folder unless needed, as Desmos will get laggy
 - Save the graph frequently, it may freeze on you while changing - restarting due to a freeze may work better if you do it from an entirely new tab
   
 ## Future Changes?? 
-- Automatically update desmos resolution
-- Try more lists of points and colours 
-  - Detect how many it needs when running a script and act accordingly
+- Be able to change output type to make a cross-stitch pattern
+- Increase max new resolution again
+- Take average of nearby pixels when zooming in instead of the exact value
