@@ -1,5 +1,7 @@
 import os, sys, time, math
 
+# For desmos, use this graph: https://www.desmos.com/calculator/aq00xusw1f
+
 # ---acquire pillow---
 try:
     from PIL import Image
