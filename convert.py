@@ -23,29 +23,6 @@ except:
     print("Please restart script.")
     sys.exit()
 
-# ---acquire opencv---
-try:
-    import cv2
-    print("opencv found")
-except:
-    stream = os.popen('pip install opencv-python')
-    output = stream.read()
-    print("windows command attempted for acquiring opencv\n" + output)
-    try:
-        import cv2
-        print("opencv found")
-    except:
-        stream = os.popen('python3 -m pip install opencv-python')
-        output = stream.read()
-        print("linux command attempted for acquiring opencv\n" + output)
-        try:
-            import cv2
-            print("opencv found")
-        except:
-            print("opencv could not be found or acquired")
-    print("Please restart script.")
-    sys.exit()
-
 # ---get images---
 pic = ""
 new_w = -1
