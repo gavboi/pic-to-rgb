@@ -1,6 +1,6 @@
 import os, sys, time, math
 
-# For desmos, use this graph: https://www.desmos.com/calculator/aq00xusw1f
+# For desmos, use this graph: https://www.desmos.com/calculator/3wzqhr9vmi
 
 # ---acquire pillow---
 try:
