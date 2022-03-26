@@ -1,5 +1,7 @@
 import os, sys, time, math
 
+# For desmos, use this graph: https://www.desmos.com/calculator/3wzqhr9vmi
+
 # ---acquire pillow---
 try:
     from PIL import Image
@@ -23,50 +25,32 @@ except:
     print("Please restart script.")
     sys.exit()
 
-# ---acquire opencv---
-try:
-    import cv2
-    print("opencv found")
-except:
-    stream = os.popen('pip install opencv-python')
-    output = stream.read()
-    print("windows command attempted for acquiring opencv\n" + output)
-    try:
-        import cv2
-        print("opencv found")
-    except:
-        stream = os.popen('python3 -m pip install opencv-python')
-        output = stream.read()
-        print("linux command attempted for acquiring opencv\n" + output)
-        try:
-            import cv2
-            print("opencv found")
-        except:
-            print("opencv could not be found or acquired")
-    print("Please restart script.")
-    sys.exit()
-
 # ---get images---
 pic = ""
-if len(sys.argv) == 1: directory = input("Please specify a path to an image or directory: ")
-else: directory = sys.argv[1]
+new_w = -1
+new_h = -1
+desmos = True
+
+print("")
+if len(sys.argv) > 1:
+    pic = sys.argv[1]
+while not (os.path.isfile(pic) and (pic.endswith(".png") or pic.endswith(".jpg"))):
+    print("No image found.")
+    pic = input("Please specify a path to an image (leave blank for auto): ")
+    if len(pic) == 0: pic = os.path.join("samples", "test.jpg")
+print("")
 if len(sys.argv) == 4 and sys.argv[2].isnumeric() and sys.argv[3].isnumeric():
     new_w, new_h = int(sys.argv[2]), int(sys.argv[3])
-else:
+while new_w < 0:
+    print("No dimensions found.")
     size = input("Please specify width and height (leave blank for auto): ")
-    size = size.replace(" ",",").replace(",,",",").split(",")
-    if len(size) > 1 and size[0].isnumeric() and size[1].isnumeric():
-        new_w, new_h = int(size[0]), int(size[1])
-    else: new_w, new_h = 0, 0
-if len(directory) == 0:
-    directory = os.path.join("samples", "test.jpg")
-    print("No file provided. Using default file {0}...".format(directory))
-if directory.endswith(".png") or directory.endswith(".jpg"):
-    if os.path.isfile(directory):
-        pic = directory
+    if len(size) == 0: new_w, new_h = 0, 0
     else:
-        print("Could not find image.")
-        sys.exit()
+        size = size.replace(" ",",").replace(",,",",").split(",")
+        if len(size) > 1 and size[0].isnumeric() and size[1].isnumeric():
+            new_w, new_h = int(size[0]), int(size[1])
+print("")
+
 ##elif directory.endswith(".mp4") or directory.endswith(".avi"):
 ##    if os.path.isfile(directory):
 ##        if not os.path.isdir("video_frames"):
@@ -105,36 +89,89 @@ print("Processing...")
 
 # ---process---
 timer = 0
-colours = []
+colours1 = []
+colours2 = []
+colours3 = []
+colours4 = []
 t = time.time()
 im = Image.open(pic)
 w, h = im.size
 if new_w*new_h == 0: # make this fit better
-    new_w, new_h = 40, 40
+    new_w, new_h = 20, round(20*h/w)
 factor_w, factor_h = w/new_w, h/new_h
 img = im.load()
-for y in range(new_h): 
-    for x in range(new_w):
-        rgba = img[math.floor(factor_w*(1/2+x)), math.floor(factor_h*(1/2+y))]
-        colours.append((rgba[0], rgba[1], rgba[2]))
-
+if desmos:
+    regions = 2 if new_w*new_h >= 2000 else 1
+    for y in range(math.floor(new_h/regions)): 
+        for x in range(math.floor(new_w/regions)):
+            rgba = img[math.floor(factor_w*(1/2+x)),
+                       math.floor(factor_h*(1/2+y))]
+            colours1.append((rgba[0], rgba[1], rgba[2]))
+    if regions > 1:
+        for y in range(math.floor(new_h/regions)): 
+            for x in range(math.floor(new_w/regions)):
+                rgba = img[math.floor(factor_w*(1/2+x)+w/regions),
+                           math.floor(factor_h*(1/2+y))]
+                colours2.append((rgba[0], rgba[1], rgba[2]))
+        for y in range(math.floor(new_h/regions)): 
+            for x in range(math.floor(new_w/regions)):
+                rgba = img[math.floor(factor_w*(1/2+x)),
+                           math.floor(factor_h*(1/2+y)+h/regions)]
+                colours3.append((rgba[0], rgba[1], rgba[2]))
+        for y in range(math.floor(new_h/regions)): 
+            for x in range(math.floor(new_w/regions)):
+                rgba = img[math.floor(factor_w*(1/2+x)+w/regions),
+                           math.floor(factor_h*(1/2+y)+h/regions)]
+                colours4.append((rgba[0], rgba[1], rgba[2]))
+else: 
+    for y in range(new_h): 
+        for x in range(new_w):
+            rgba = img[math.floor(factor_w*(1/2+x)), math.floor(factor_h*(1/2+y))]
+            colours1.append((rgba[0], rgba[1], rgba[2]))
 # ---display---
 print("Image: {0}".format(pic))
-print("Original size: {0}x{1} ({2})".format(w, h, w/h))
-print("New size: {0}x{1} ({2})".format(new_w, new_h, new_w/new_h))
-print("Size factor: {0}x{1}".format(factor_w, factor_h))
-if len(colours) > 10000: print("WARNING: Desmos will not accept lists of over 10000")
-desmos = True
-despre = "S=Calc.getState()\nS.expressions.list[1].latex=\"C="
-despost = "\"\nCalc.setState(S)"
-desform = "\\\\operatorname{rgb}" if desmos else ""
-pr = "["
-for c in colours: pr += desform + str(c) + ","
+print("Original size: {0}x{1} ({2})".format(w, h, round(w/h, 3)))
+print("New size: {0}x{1} ({2})".format(new_w, new_h, round(new_w/new_h, 3)))
+print("Size factor: {0}x{1}".format(round(factor_w,3), round(factor_h,3)))
+pr = ""
+# -desmos-
 if desmos:
-    pr = (despre + "\\\\left" +
-          pr[:-1].replace(" ","").replace("(", "\\\\left(").replace(")", "\\\\right)") +
+    print("(Desmos format)")
+    print("Regions: {0}".format(regions))
+    if len(colours1) > 2000:
+        print("WARNING: Desmos may not accept this length ({0})".format(len(colours1)))
+    despre = "S=Calc.getState()\n"
+    desc1 = "S.expressions.list[1].latex=\"C_1="
+    desc2 = "\"\nS.expressions.list[2].latex=\"C_2="
+    desc3 = "\"\nS.expressions.list[3].latex=\"C_3="
+    desc4 = "\"\nS.expressions.list[4].latex=\"C_4="
+    despost = ("\"\nS.expressions.list[5].latex=\"N={0}" +
+               "\"\nS.expressions.list[6].latex=\"W={1}" +
+               "\"\nS.expressions.list[7].latex=\"H={2}" +
+               "\"\nCalc.setState(S)").format(regions, math.floor(new_w/regions),
+                                              math.floor(new_h/regions))
+    rgbop = "\\\\operatorname{rgb}"
+    pr1 = "\\\\left[ "
+    pr2 = "\\\\left[ "
+    pr3 = "\\\\left[ "
+    pr4 = "\\\\left[ "
+    for c in colours1: pr1 += rgbop + str(c) + ","
+    for c in colours2: pr2 += rgbop + str(c) + ","
+    for c in colours3: pr3 += rgbop + str(c) + ","
+    for c in colours4: pr4 += rgbop + str(c) + ","
+    pr = (despre + desc1 +
+          pr1[:-1].replace(" ","").replace("(", "\\\\left(").replace(")", "\\\\right)") +
+          "\\\\right]" + desc2 +
+          pr2[:-1].replace(" ","").replace("(", "\\\\left(").replace(")", "\\\\right)") +
+          "\\\\right]" + desc3 +
+          pr3[:-1].replace(" ","").replace("(", "\\\\left(").replace(")", "\\\\right)") +
+          "\\\\right]" + desc4 +
+          pr4[:-1].replace(" ","").replace("(", "\\\\left(").replace(")", "\\\\right)") +
           "\\\\right]" + despost)
-else: pr = pr[:-1] + "]"
+else:
+    print("(Standard rgb format)")
+    for c in colours1:
+        pr += c + "\n" 
 f = open("out.txt", "w")
 f.write(pr)
 f.close()
