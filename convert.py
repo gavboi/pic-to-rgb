@@ -2,27 +2,11 @@ import os, sys, time, math
 
 # For desmos, use this graph: https://www.desmos.com/calculator/3wzqhr9vmi
 
-# ---acquire pillow---
-try:
-    from PIL import Image
-    print("pillow found")
+# ---importing pillow---
+try: from PIL import Image
 except:
-    stream = os.popen('pip install pillow')
-    output = stream.read()
-    print("windows command attempted for acquiring pillow\n" + output)
-    try:
-        from PIL import Image
-        print("pillow found")
-    except:
-        stream = os.popen('python3 -m pip install pillow')
-        output = stream.read()
-        print("linux command attempted for acquiring pillow\n" + output)
-        try:
-            from PIL import Image
-            print("pillow found")
-        except:
-            print("pillow could not be found or acquired")
-    print("Please restart script.")
+    print("Missing required library. Please install pillow.")
+    time.sleep(3)
     sys.exit()
 
 # ---get images---
