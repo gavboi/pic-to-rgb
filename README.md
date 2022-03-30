@@ -20,6 +20,8 @@ Latest Desmos graph link: https://www.desmos.com/calculator/3wzqhr9vmi
 - Save the graph frequently, it may freeze on you while changing - restarting due to a freeze may work better if you do it from an entirely new tab
   
 ## Future Changes?? 
-- Be able to change output type to make a cross-stitch pattern
+- Be able to change output type to make a cross-stitch pattern/excel sheet
+- Restrict colour palette
+- Some kind of menu
 - Increase max new resolution again
 - Take average of nearby pixels when zooming in instead of the exact value
