@@ -9,11 +9,14 @@ except:
     time.sleep(3)
     sys.exit()
 
+DESMOS = 0
+HTML = 1
+
 # ---get images---
 pic = ""
 new_w = -1
 new_h = -1
-desmos = True
+out_type = 1
 
 print("")
 if len(sys.argv) > 1:
@@ -84,7 +87,7 @@ if new_w*new_h == 0: # make this fit better
     new_w, new_h = 20, round(20*h/w)
 factor_w, factor_h = w/new_w, h/new_h
 img = im.load()
-if desmos:
+if out_type == DESMOS:
     regions = 2 if new_w*new_h >= 2000 else 1
     for y in range(math.floor(new_h/regions)): 
         for x in range(math.floor(new_w/regions)):
@@ -107,6 +110,12 @@ if desmos:
                 rgba = img[math.floor(factor_w*(1/2+x)+w/regions),
                            math.floor(factor_h*(1/2+y)+h/regions)]
                 colours4.append((rgba[0], rgba[1], rgba[2]))
+elif out_type == HTML:
+    for y in range(new_h):
+        colours1.append([])
+        for x in range(new_w):
+            rgba = img[math.floor(factor_w*(1/2+x)), math.floor(factor_h*(1/2+y))]
+            colours1[y].append((rgba[0], rgba[1], rgba[2]))
 else: 
     for y in range(new_h): 
         for x in range(new_w):
@@ -118,8 +127,9 @@ print("Original size: {0}x{1} ({2})".format(w, h, round(w/h, 3)))
 print("New size: {0}x{1} ({2})".format(new_w, new_h, round(new_w/new_h, 3)))
 print("Size factor: {0}x{1}".format(round(factor_w,3), round(factor_h,3)))
 pr = ""
+ext = "txt"
 # -desmos-
-if desmos:
+if out_type == DESMOS:
     print("(Desmos format)")
     print("Regions: {0}".format(regions))
     if len(colours1) > 2000:
@@ -152,15 +162,17 @@ if desmos:
           "\\\\right]" + desc4 +
           pr4[:-1].replace(" ","").replace("(", "\\\\left(").replace(")", "\\\\right)") +
           "\\\\right]" + despost)
+elif out_type == HTML:
+    ext = ".html"
 else:
     print("(Standard rgb format)")
     for c in colours1:
         pr += c + "\n" 
-f = open("out.txt", "w")
+f = open("out.{0}".format(ext), "w")
 f.write(pr)
 f.close()
 timer = time.time()-t
-print("Output saved to out.txt")
+print("Output saved to out{0}".format(ext))
 print("Completed in {0}s.".format(round(timer, 3), 3))
 input("\n([Enter] to close)")
 time.sleep(0.2)
