@@ -163,6 +163,21 @@ if out_type == DESMOS:
           pr4[:-1].replace(" ","").replace("(", "\\\\left(").replace(")", "\\\\right)") +
           "\\\\right]" + despost)
 elif out_type == HTML:
+    html_head = ("<!DOCTYPE html><html><head><title>" +
+                 "{0} {1}x{2}</title></head><style>" +
+                 " .cell{width:20px;height:20px;text-align:center;" +
+                 "vertical-align:middle;font-size:6pt;color:#666666;" +
+                 "border:0px;font-family:'Arial';white-space:nowrap;" +
+                 "cursor:default;} .outer{border:solid 1px #dddddd;}" +
+                 "").format(pic, new_w, new_h)
+    def html_style(i, bgc, tc):
+        return ".s{0}{background-color:#{1};color:#{2};}".format(i, bgc, tc)
+    html_body1 = ""
+    html_body2 = ""
+    html_body3 = ""
+    def html_bodyt(cls, val):
+        return "<th class=\"{0}\">{1}</th>".format(cls, val)
+    
     ext = ".html"
 else:
     print("(Standard rgb format)")
