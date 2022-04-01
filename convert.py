@@ -164,21 +164,50 @@ if out_type == DESMOS:
           "\\\\right]" + despost)
 elif out_type == HTML:
     html_head = ("<!DOCTYPE html><html><head><title>" +
-                 "{0} {1}x{2}</title></head><style>" +
+                 "{0} {1}x{2}</title></head><style>".format(pic, new_w, new_h) +
                  " .cell{width:20px;height:20px;text-align:center;" +
                  "vertical-align:middle;font-size:6pt;color:#666666;" +
                  "border:0px;font-family:'Arial';white-space:nowrap;" +
-                 "cursor:default;} .outer{border:solid 1px #dddddd;}" +
-                 "").format(pic, new_w, new_h)
+                 "cursor:default;} .outer{border:solid 1px #dddddd;}")
+    html_body1 = "</style><body><table class=\"tbl\" cellspacing=\"0\"><thead><tr>"
+    html_body2 = "</tr></thead><tbody><tr>"
+    html_body3 = "</tr><tr>"
+    html_body4 = "</tr></tbody></table></body></html>"
     def html_style(i, bgc, tc):
-        return ".s{0}{background-color:#{1};color:#{2};}".format(i, bgc, tc)
-    html_body1 = ""
-    html_body2 = ""
-    html_body3 = ""
-    def html_bodyt(cls, val):
-        return "<th class=\"{0}\">{1}</th>".format(cls, val)
-    
-    ext = ".html"
+        return (" .s{0}".format(i) + "{background-color:#" +
+                "{0};color:#{1};".format(bgc, tc) + "}")
+    def html_bodyt(typ, cls, val):
+        return "<t{0} class=\"{1}\">{2}</t{0}>".format(typ, cls, val)
+    S = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    def b26(i):
+        a = math.floor(i/676)
+        b = math.floor((i-a*676)/26)
+        c = math.floor(i-a*676-b*26)
+        if new_h > 25:
+            if new_h > 675: return S[a] + S[b] + S[c]
+            else: return S[b] + S[c]
+        else: return S[c]
+    pr1 = ""
+    pr2 = html_bodyt("h", "", "")
+    pr3 = ""
+    i = 0
+    j = 0
+    for row in colours1:
+        pr3 += html_bodyt("h", "cell outer", b26(j)) # pixel row title
+        for rgb in row: 
+            bgc = (("0" if rgb[0] < 16 else "") + hex(rgb[0])[2:] +
+                   ("0" if rgb[1] < 16 else "") + hex(rgb[1])[2:] +
+                   ("0" if rgb[2] < 16 else "") + hex(rgb[2])[2:])
+            tc = "ffffff" if (rgb[0] + rgb[1] + rgb[2] < 500) else "000000"
+            pr1 += html_style(i, bgc, tc) # style
+            if j == 0: pr2 += html_bodyt("h", "cell outer", i + 1) # title row
+            pr3 += html_bodyt("d", "cell s{0}".format(i), "") # pixel row content
+            i += 1
+        pr3 += html_body3 # pixel row separator
+        j += 1
+    pr3 = pr3[:-len(html_body3)]
+    pr = (html_head + pr1 + html_body1 + pr2 + html_body2 + pr3 + html_body4)
+    ext = "html"
 else:
     print("(Standard rgb format)")
     for c in colours1:
@@ -187,7 +216,27 @@ f = open("out.{0}".format(ext), "w")
 f.write(pr)
 f.close()
 timer = time.time()-t
-print("Output saved to out{0}".format(ext))
+print("Output saved to out.{0}".format(ext))
 print("Completed in {0}s.".format(round(timer, 3), 3))
 input("\n([Enter] to close)")
 time.sleep(0.2)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
